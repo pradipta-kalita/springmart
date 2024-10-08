@@ -1,7 +1,5 @@
 package com.springMart.controller;
 
-import com.springMart.dto.product.ProductRequestDTO;
-import com.springMart.dto.product.ProductResponseDTO;
 import com.springMart.model.Product;
 import com.springMart.service.product.ProductService;
 import org.springframework.http.ResponseEntity;
@@ -20,24 +18,28 @@ public class ProductController {
         this.productService = productService;
     }
 
-    @PostMapping
-    public ProductResponseDTO createProduct(@RequestBody ProductRequestDTO productRequestDTO){
-        return productService.createProduct(productRequestDTO);
+    @GetMapping("/hello")
+    public String hello(){
+        return "Hello";
+    }
+    @PostMapping(consumes = "multipart/form-data")
+    public Product createProduct(@ModelAttribute Product product){
+        return productService.createProduct(product);
     }
 
     @GetMapping
-    public List<ProductResponseDTO> getAllProducts(){
+    public List<Product> getAllProducts(){
         return productService.getAllProducts();
     }
 
     @GetMapping("/{productId}")
-    public ProductResponseDTO getProductById(@PathVariable UUID productId){
+    public Product getProductById(@PathVariable UUID productId){
         return productService.getProductById(productId);
     }
 
     @PutMapping("/{productId}")
-    public ProductResponseDTO updateProductById(@PathVariable UUID productId,@RequestBody ProductRequestDTO productRequestDTO){
-        return productService.updateProduct(productId,productRequestDTO);
+    public Product updateProductById(@PathVariable UUID productId,@RequestBody Product product){
+        return productService.updateProduct(productId,product);
     }
 
     @DeleteMapping("/{productId}")

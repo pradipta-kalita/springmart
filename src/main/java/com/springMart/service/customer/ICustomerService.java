@@ -8,9 +8,10 @@ import java.util.UUID;
 public interface ICustomerService {
     Customer createCustomer(Customer customer);
     Customer getCustomerById(UUID customerId);
+    Customer getCustomerByEmail(String email);
     Customer updateCustomerById(UUID customerId, Customer customer);
-    void deleteCustomer(UUID customerId);
-
+    void deleteCustomerById(UUID customerId);
+    void deleteCustomerByEmail(String email);
     List<Customer> getAllCustomers();
     Customer findByEmail(String email);
 }

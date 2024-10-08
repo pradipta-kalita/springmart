@@ -22,11 +22,14 @@ public class Category {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "name",nullable = false)
+    @Column(name = "slug",nullable = false)
     private String name;
 
     @Column(name = "description",length = 50)
     private String description;
+
+    @Column(name = "slug", unique = true)
+    private String slug;
 
     @OneToMany(mappedBy = "category",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Set<Product> products;

@@ -1,6 +1,6 @@
 package com.springMart.repository;
 
-import com.springMart.model.Order;
+import com.springMart.model.order.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;

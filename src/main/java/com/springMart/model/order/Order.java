@@ -1,5 +1,7 @@
-package com.springMart.model;
+package com.springMart.model.order;
 
+import com.springMart.model.Customer;
+import com.springMart.model.OrderItem;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -55,6 +57,3 @@ public class Order {
     }
 }
 
-enum OrderStatus{
-    PENDING,SHIPPED,DELIVERED
-}

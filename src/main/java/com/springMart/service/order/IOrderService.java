@@ -1,6 +1,6 @@
 package com.springMart.service.order;
 
-import com.springMart.model.Order;
+import com.springMart.model.order.Order;
 
 import java.math.BigDecimal;
 import java.util.List;

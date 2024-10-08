@@ -1,35 +1,44 @@
 package com.springMart.service.product;
 
-import com.springMart.dto.product.ProductRequestDTO;
-import com.springMart.dto.product.ProductResponseDTO;
 import com.springMart.model.Product;
+import com.springMart.repository.ProductRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 import java.util.UUID;
 
+@Service
+@Transactional
 public class ProductService implements IProductService {
 
+    private final ProductRepository productRepository;
+
+    public ProductService(ProductRepository productRepository) {
+        this.productRepository = productRepository;
+    }
+
+
     @Override
-    public ProductResponseDTO createProduct(ProductRequestDTO productRequestDTO) {
+    public Product createProduct(Product product) {
         return null;
     }
 
     @Override
-    public ProductResponseDTO getProductById(UUID id) {
+    public Product getProductById(UUID id) {
         return null;
     }
 
     @Override
-    public List<ProductResponseDTO> getAllProducts() {
+    public List<Product> getAllProducts() {
         return List.of();
     }
 
     @Override
-    public ProductResponseDTO updateProduct(UUID id, ProductRequestDTO productRequestDTO) {
+    public Product updateProduct(UUID id, Product product) {
         return null;
     }
-
 
     @Override
     public void deleteProduct(UUID id) {
@@ -37,12 +46,12 @@ public class ProductService implements IProductService {
     }
 
     @Override
-    public ProductResponseDTO addImageToProduct(UUID productId, MultipartFile file) {
+    public Product addImageToProduct(UUID productId, MultipartFile file) {
         return null;
     }
 
     @Override
-    public ProductResponseDTO removeImageFromProduct(UUID productId, UUID imageId) {
+    public Product removeImageFromProduct(UUID productId, UUID imageId) {
         return null;
     }
 }

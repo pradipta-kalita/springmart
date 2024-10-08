@@ -15,7 +15,6 @@ import java.util.UUID;
 
 @Getter
 @Setter
-@RequiredArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "products")
@@ -54,6 +53,10 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Set<OrderItem> orderItems = new HashSet<>();
 
+    @ManyToOne
+    @JoinColumn(name = "category_id",nullable = false)
+    private Category category;
+
     @PrePersist
     protected void onCreate(){
         createdAt=LocalDate.now();
@@ -63,6 +66,4 @@ public class Product {
     protected  void onUpdate(){
         updatedAt=LocalDate.now();
     }
-
-
 }

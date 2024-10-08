@@ -1,11 +1,15 @@
 package com.springMart.service.order;
 
-import com.springMart.model.Order;
+import com.springMart.model.order.Order;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
+@Service
+@Transactional
 public class OrderService implements IOrderService{
     @Override
     public Order createOrder(Order order) {
