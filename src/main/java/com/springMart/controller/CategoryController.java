@@ -1,7 +1,6 @@
 package com.springMart.controller;
 
-import com.springMart.dto.category.CategoryRequestDTO;
-import com.springMart.dto.category.CategoryResponseDTO;
+import com.springMart.model.Category;
 import com.springMart.service.category.CategoryService;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,23 +18,23 @@ public class CategoryController {
     }
 
     @PostMapping
-    public CategoryResponseDTO createCategory(@RequestBody CategoryRequestDTO categoryRequestDTO){
-        return categoryService.createCategory(categoryRequestDTO);
+    public Category createCategory(@RequestBody Category category){
+        return categoryService.createCategory(category);
     }
 
     @GetMapping
-    public List<CategoryResponseDTO> getAllCategories(){
+    public List<Category> getAllCategories(){
         return categoryService.getAllCategories();
     }
 
     @GetMapping("/{categoryId}")
-    public CategoryResponseDTO getCategoryById(@PathVariable UUID categoryId){
+    public Category getCategoryById(@PathVariable UUID categoryId){
         return categoryService.getCategoryById(categoryId);
     }
 
     @PutMapping("/{categoryId}")
-    public  CategoryResponseDTO updateCategoryById(@PathVariable UUID categoryId,@RequestBody CategoryRequestDTO categoryRequestDTO){
-        return categoryService.updateCategory(categoryId,categoryRequestDTO);
+    public  Category updateCategoryById(@PathVariable UUID categoryId,@RequestBody Category category){
+        return categoryService.updateCategory(categoryId,category);
     }
 
     @DeleteMapping("/{categoryId}")

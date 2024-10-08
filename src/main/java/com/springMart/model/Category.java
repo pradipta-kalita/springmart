@@ -22,7 +22,7 @@ public class Category {
     @Column(name = "id")
     private UUID id;
 
-    @Column(name = "slug",nullable = false)
+    @Column(name = "name",nullable = false)
     private String name;
 
     @Column(name = "description",length = 50)

@@ -1,7 +1,6 @@
 package com.springMart.controller;
 
-import com.springMart.dto.customer.CustomerRequestDTO;
-import com.springMart.dto.customer.CustomerResponseDTO;
+import com.springMart.model.Customer;
 import com.springMart.service.customer.CustomerService;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,23 +18,23 @@ public class CustomerController {
     }
 
     @PostMapping
-    public CustomerResponseDTO createCustomer(@RequestBody CustomerRequestDTO customerRequestDTO){
-        return customerService.createCustomer(customerRequestDTO);
+    public Customer createCustomer(@RequestBody Customer customer){
+        return customerService.createCustomer(customer);
     }
 
     @GetMapping
-    public List<CustomerResponseDTO> getAllCustomers(){
+    public List<Customer> getAllCustomers(){
         return customerService.getAllCustomers();
     }
 
     @GetMapping("/{customerId}")
-    public CustomerResponseDTO getCustomerById(@PathVariable UUID customerId){
+    public Customer getCustomerById(@PathVariable UUID customerId){
         return customerService.getCustomerById(customerId);
     }
 
     @PutMapping("/{customerId}")
-    public CustomerResponseDTO updateCustomerById(@PathVariable UUID customerId,@RequestBody CustomerRequestDTO customerRequestDTO){
-        return customerService.updateCustomerById(customerId,customerRequestDTO);
+    public Customer updateCustomerById(@PathVariable UUID customerId,@RequestBody Customer customer){
+        return customerService.updateCustomerById(customerId,customer);
     }
 
     @DeleteMapping("/{customerId}")
@@ -49,7 +48,7 @@ public class CustomerController {
     }
 
     @GetMapping("/email")
-    public CustomerResponseDTO getCustomerByEmail(@RequestBody String email){
+    public Customer getCustomerByEmail(@RequestBody String email){
         return customerService.getCustomerByEmail(email);
     }
 
