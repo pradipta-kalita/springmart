@@ -2,6 +2,7 @@ package com.springMart.model;
 
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
@@ -25,17 +26,24 @@ public class Product {
     @Column(name = "id")
     private UUID id;
 
+    @NotBlank(message = "Product name is required.")
+    @Size(min = 1,max = 200,message = "Name should be at least 3 characters long and maximum 200.")
     @Column(name = "name",nullable = false,length = 200)
     private String name;
 
+
     @Lob
+    @NotBlank(message = "Product description is required.")
     @Column(name = "description",nullable = false)
     private String description;
 
-
+    @PositiveOrZero(message = "Product price should be at least 0 or more than that.")
+    @Digits(integer = 10,fraction = 2)
     @Column(name = "price",nullable = false,precision = 12, scale = 2)
     private BigDecimal price;
 
+    @NotNull(message = "Inventory cannot be null.")
+    @PositiveOrZero(message = "Inventory should be at least 0 or more than that.")
     @Column(name = "inventory",nullable = false)
     private int inventory;
 
@@ -53,6 +61,7 @@ public class Product {
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Set<OrderItem> orderItems = new HashSet<>();
 
+    @NotBlank(message = "Category id is required.")
     @ManyToOne
     @JoinColumn(name = "category_id",nullable = false)
     private Category category;

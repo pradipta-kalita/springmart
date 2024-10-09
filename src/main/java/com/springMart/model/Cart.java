@@ -1,6 +1,7 @@
 package com.springMart.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    @NotBlank(message = "Customer id is required.")
     @OneToOne
     @JoinColumn(name = "customer_id",nullable = false)
     private Customer customer;
@@ -33,17 +35,15 @@ public class Cart {
     private BigDecimal totalPrice;
 
     // Calculate total price based on items in the cart
-    public Double calculateTotalPrice(){
-        return cartItems.stream().mapToDouble(item->item.getPrice()*item.getQuantity()).sum();
+    public BigDecimal calculateTotalPrice() {
+        return cartItems.stream()
+                .map(item ->item.getPrice().multiply(new BigDecimal(item.getQuantity())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    // Another way of doing it
-    /*
-     public double calculateTotalPrice() {
-          return cartItems.stream()
-                  .mapToDouble(CartItem::getTotalItemPrice)
-                  .sum();
-      }
-    */
-
+    @PrePersist
+    @PreUpdate
+    protected void onUpdate(){
+        this.totalPrice=calculateTotalPrice();
+    }
 }

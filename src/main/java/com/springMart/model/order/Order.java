@@ -3,6 +3,9 @@ package com.springMart.model.order;
 import com.springMart.model.Customer;
 import com.springMart.model.OrderItem;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.PositiveOrZero;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,16 +33,20 @@ public class Order {
     @Column(name = "order_date",nullable = false)
     private LocalDateTime orderDate;
 
+    @NotBlank(message = "status is required")
     @Enumerated(EnumType.STRING)
     @Column(name = "status",nullable = false)
     private OrderStatus status;
 
+    @PositiveOrZero
     @Column(name = "total_amount",nullable = false)
     private BigDecimal totalAmount;
 
+    @NotEmpty(message = "Order must contain at least one item")
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<OrderItem> orderItems = new HashSet<>();
 
+    @NotBlank(message = "Customer id is required.")
     @ManyToOne
     @JoinColumn(name = "customer_id",nullable = false)
     private Customer customer;
@@ -48,6 +55,12 @@ public class Order {
     protected void onCreate() {
         this.orderDate = LocalDateTime.now();
         this.status = OrderStatus.PENDING;
+        this.totalAmount=calculateTotalAmount();
+    }
+
+    @PreUpdate
+    protected void onUpdate(){
+        this.totalAmount=calculateTotalAmount();
     }
 
     public BigDecimal calculateTotalAmount(){
@@ -55,5 +68,7 @@ public class Order {
                 map(OrderItem::getTotalItemPrice).
                 reduce(BigDecimal.ZERO,BigDecimal::add);
     }
+
+
 }
 

@@ -1,5 +1,6 @@
 package com.springMart.model.admin;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -24,10 +25,11 @@ public class Admin {
     private UUID id;
 
     @NotBlank(message = "Username is required")
-    @Size(max = 50)
+    @Size(max = 50, message = "Username is too long")
     @Column(name = "username",  nullable = false)
     private String name;
 
+    @JsonIgnore
     @NotBlank(message = "Password is required")
     @Size(min = 8, message = "Password must be at least 8 characters long")
     @Column(name = "password", nullable = false)
@@ -38,10 +40,8 @@ public class Admin {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @NotNull(message = "Role is required")
+    @NotBlank(message = "Role is required")
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
     private AdminRole role;
-
-    
 }

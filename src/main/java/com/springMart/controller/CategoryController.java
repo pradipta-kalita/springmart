@@ -17,11 +17,6 @@ public class CategoryController {
         this.categoryService = categoryService;
     }
 
-    @PostMapping
-    public Category createCategory(@RequestBody Category category){
-        return categoryService.createCategory(category);
-    }
-
     @GetMapping
     public List<Category> getAllCategories(){
         return categoryService.getAllCategories();
@@ -30,16 +25,6 @@ public class CategoryController {
     @GetMapping("/{categoryId}")
     public Category getCategoryById(@PathVariable UUID categoryId){
         return categoryService.getCategoryById(categoryId);
-    }
-
-    @PutMapping("/{categoryId}")
-    public  Category updateCategoryById(@PathVariable UUID categoryId,@RequestBody Category category){
-        return categoryService.updateCategory(categoryId,category);
-    }
-
-    @DeleteMapping("/{categoryId}")
-    public void deleteCategory(@PathVariable UUID categoryId){
-        categoryService.deleteCategory(categoryId);
     }
 
 }

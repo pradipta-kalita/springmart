@@ -9,6 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -21,6 +22,12 @@ public class AdminController {
         this.adminService = adminService;
     }
 
+
+    @GetMapping("/categories")
+    public List<Category> getAllCategories() {
+        return adminService.getAllCategories();
+    }
+
     @PostMapping
     public ResponseEntity<Admin> createAdmin(@RequestBody @Valid Admin admin) {
         Admin ResponseAdmin = adminService.createAdmin(admin);
@@ -30,16 +37,15 @@ public class AdminController {
 
     // Create a new category
     @PostMapping("/categories")
-    public ResponseEntity<String> createCategory(@RequestBody @Valid Category category){
-        adminService.createCategory(category);
-        return ResponseEntity.status(HttpStatus.CREATED).body("Category created successfully");
+    public ResponseEntity<Category> createCategory(@RequestBody @Valid Category category){
+        Category createdCategory = adminService.createCategory(category);
+        return ResponseEntity.status(HttpStatus.CREATED).body(createdCategory);
     }
 
     // Update a category
     @PutMapping("/categories/{categoryId}")
-    public ResponseEntity<String> updateCategory(@PathVariable UUID categoryId, @RequestBody @Valid Category category) {
-        adminService.updateCategory(categoryId, category);
-        return ResponseEntity.ok("Category updated successfully");
+    public ResponseEntity<Category> updateCategory(@PathVariable UUID categoryId, @RequestBody @Valid Category category) {
+        return ResponseEntity.ok(adminService.updateCategory(categoryId, category));
     }
 
     // Delete a category
