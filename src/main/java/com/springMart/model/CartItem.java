@@ -1,5 +1,6 @@
 package com.springMart.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -33,11 +34,15 @@ public class CartItem {
     @Column(name = "price",nullable = false)
     private BigDecimal price;
 
+    // Many-to-One relation with Cart Entity
     @NotBlank(message = "Cart id is required.")
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "cart_id",nullable = false)
     private Cart cart;
 
+    // Many-to-One relation with Product Entity
+    @JsonBackReference
     @NotBlank(message = "Product id is required.")
     @ManyToOne
     @JoinColumn(name = "product_id",nullable = false)

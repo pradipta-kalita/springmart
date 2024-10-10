@@ -1,5 +1,6 @@
 package com.springMart.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.springMart.model.order.Order;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
@@ -53,10 +54,12 @@ public class Customer {
     private String address;
 
     // One-to-Many relationship with Customer Entity
+    @JsonManagedReference
     @OneToMany(mappedBy = "customer",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Set<Order> orders = new HashSet<>();
 
     // One-to-One relationship with Cart Entity
+    @JsonManagedReference
     @OneToOne(mappedBy = "customer",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Cart cart;
 }

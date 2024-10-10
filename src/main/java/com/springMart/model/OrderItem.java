@@ -1,5 +1,6 @@
 package com.springMart.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.springMart.model.order.Order;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
@@ -32,10 +33,14 @@ public class OrderItem {
     @Column(name = "price",nullable = false)
     private BigDecimal price;
 
+    // Many-to-One relation with Order Entity
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "order_id",nullable = false)
     private Order order;
 
+    // Many-to-One relation with Product Entity
+    @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "product_id",nullable = false)
     private Product product;

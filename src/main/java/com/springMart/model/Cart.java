@@ -1,5 +1,7 @@
 package com.springMart.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -23,11 +25,15 @@ public class Cart {
     @GeneratedValue(strategy = GenerationType.UUID)
     private UUID id;
 
+    // One-to-One relation with Customer Entity
     @NotBlank(message = "Customer id is required.")
+    @JsonBackReference
     @OneToOne
     @JoinColumn(name = "customer_id",nullable = false)
     private Customer customer;
 
+    // One-to-Many relation with CartItem Entity
+    @JsonManagedReference
     @OneToMany(mappedBy = "cart",cascade = CascadeType.ALL,orphanRemoval = true,fetch = FetchType.LAZY)
     private Set<CartItem> cartItems= new HashSet<>();
 

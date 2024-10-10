@@ -1,6 +1,7 @@
 package com.springMart.model.admin;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -29,7 +30,7 @@ public class Admin {
     @Column(name = "username",  nullable = false)
     private String name;
 
-    @JsonIgnore
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     @NotBlank(message = "Password is required")
     @Size(min = 8, message = "Password must be at least 8 characters long")
     @Column(name = "password", nullable = false)
@@ -40,8 +41,7 @@ public class Admin {
     @Column(name = "email", unique = true, nullable = false)
     private String email;
 
-    @NotBlank(message = "Role is required")
     @Enumerated(EnumType.STRING)
     @Column(name = "role", nullable = false)
-    private AdminRole role;
+    private AdminRole role= AdminRole.EDITOR;
 }

@@ -1,14 +1,26 @@
 package com.springMart.service.admin;
 
+import com.springMart.dto.ProductRequestDTO;
 import com.springMart.model.Category;
+import com.springMart.model.Image;
 import com.springMart.model.Product;
 import com.springMart.model.admin.Admin;
 import com.springMart.repository.AdminRepository;
 import com.springMart.repository.CategoryRepository;
+import com.springMart.repository.ImageRepository;
 import com.springMart.repository.ProductRepository;
+
+import lombok.Getter;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.ClassPathResource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.swing.text.html.Option;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -20,11 +32,17 @@ public class AdminService implements IAdminService{
     private final AdminRepository adminRepository;
     private final CategoryRepository categoryRepository;
     private final ProductRepository productRepository;
+    private final ImageRepository imageRepository;
 
-    public AdminService(AdminRepository adminRepository, CategoryRepository categoryRepository, ProductRepository productRepository) {
+    @Getter
+    @Value("${upload.dir}")
+    private String uploadDir;
+
+    public AdminService(AdminRepository adminRepository, CategoryRepository categoryRepository, ProductRepository productRepository, ImageRepository imageRepository) {
         this.adminRepository = adminRepository;
         this.categoryRepository = categoryRepository;
         this.productRepository = productRepository;
+        this.imageRepository = imageRepository;
     }
 
     @Override
@@ -61,8 +79,57 @@ public class AdminService implements IAdminService{
     }
 
     @Override
-    public Product createProduct(Product product) {
-        return productRepository.save(product);
+    public Product createProduct(ProductRequestDTO product) {
+        System.out.println("It entered createProduct() method");
+        Product newProduct = new Product();
+        newProduct.setName(product.getName());
+        newProduct.setDescription(product.getDescription());
+        newProduct.setPrice(product.getPrice());
+        newProduct.setInventory(product.getInventory());
+        Optional<Category> optionalCategory = categoryRepository.findById(product.getCategoryId());
+        if(optionalCategory.isPresent()){
+            System.out.println("Category id :" + (optionalCategory.get().getId()).toString());
+            newProduct.setCategory(optionalCategory.get());
+        }else{
+            throw new RuntimeException("Category not found.");
+        }
+        Product savedProduct = productRepository.saveAndFlush(newProduct);
+        MultipartFile[] images = product.getImages();
+        if (images != null && images.length > 0) {
+            for (MultipartFile image : images) {
+                // Check if the content type is an image (you can allow specific types)
+                String contentType = image.getContentType();
+                if (contentType == null || !contentType.equals("image/jpeg")) {
+                    throw new RuntimeException("Only JPG files are allowed.");
+                }
+
+                // Ensure the upload directory exists
+                File dir = new File(getUploadDir());
+                if (!dir.exists()) {
+                    boolean dirsCreated = dir.mkdirs();
+                    if (!dirsCreated) {
+                        throw new RuntimeException("Failed to create directory for uploads");
+                    }
+                }
+
+                // Generate a unique filename and save the file
+                String filename = UUID.randomUUID().toString() + "_" + image.getOriginalFilename();
+                try {
+                    File serverFile = new File(dir, filename);
+                    image.transferTo(serverFile);
+
+                    // Create Image entity and save it
+                    Image newImage = new Image();
+                    newImage.setUrl(Paths.get("uploads/images", filename).toString()); // Store relative URL or path
+                    newImage.setProduct(savedProduct);
+                    imageRepository.saveAndFlush(newImage);
+                } catch (IOException e) {
+                    throw new RuntimeException("Failed to store image", e);
+                }
+            }
+        }
+
+        return productRepository.findById(newProduct.getId()).orElseThrow(()-> new RuntimeException("Product not found."));
     }
 
     @Override
@@ -100,7 +167,24 @@ public class AdminService implements IAdminService{
     }
 
     @Override
+    public List<Product> getAllProducts() {
+        return productRepository.findAll();
+    }
+
+    @Override
     public Admin createAdmin(Admin admin) {
         return adminRepository.save(admin);
     }
+
+    @Override
+    public void deleteAdmin(UUID adminId) {
+        Optional<Admin> optionalAdmin = adminRepository.findById(adminId);
+        if(optionalAdmin.isPresent()){
+            adminRepository.deleteById(optionalAdmin.get().getId());
+        }else{
+            throw new RuntimeException("Admin does not exist.");
+        }
+    }
+
+
 }

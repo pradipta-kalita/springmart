@@ -1,8 +1,8 @@
 package com.springMart.model;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -39,6 +39,8 @@ public class Category {
     @Column(name = "slug", unique = true)
     private String slug;
 
+    // One-to-Many relation with Product Entity
+    @JsonManagedReference
     @OneToMany(mappedBy = "category",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Set<Product> products;
 

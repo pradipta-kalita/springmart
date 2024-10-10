@@ -1,5 +1,7 @@
 package com.springMart.model.order;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.springMart.model.Customer;
 import com.springMart.model.OrderItem;
 import jakarta.persistence.*;
@@ -42,10 +44,14 @@ public class Order {
     @Column(name = "total_amount",nullable = false)
     private BigDecimal totalAmount;
 
+    // One-to-Many relation with OrderItem Entity
+    @JsonManagedReference
     @NotEmpty(message = "Order must contain at least one item")
     @OneToMany(mappedBy = "order",cascade = CascadeType.ALL,orphanRemoval = true)
     private Set<OrderItem> orderItems = new HashSet<>();
 
+    // Many-to-One relation with Customer
+    @JsonBackReference
     @NotBlank(message = "Customer id is required.")
     @ManyToOne
     @JoinColumn(name = "customer_id",nullable = false)

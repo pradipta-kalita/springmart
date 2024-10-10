@@ -1,6 +1,9 @@
 package com.springMart.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.Getter;
@@ -37,6 +40,7 @@ public class Product {
     @Column(name = "description",nullable = false)
     private String description;
 
+    @NotNull(message = "Price is required")
     @PositiveOrZero(message = "Product price should be at least 0 or more than that.")
     @Digits(integer = 10,fraction = 2)
     @Column(name = "price",nullable = false,precision = 12, scale = 2)
@@ -54,14 +58,20 @@ public class Product {
     private LocalDate updatedAt;
 
     // One-to-Many relationship with Image Entity
+    @JsonManagedReference
     @OneToMany(mappedBy = "product",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Set<Image> images= new HashSet<>();
 
     // One-to-Many relationship with OrderItem
+    @JsonIgnore
+    @JsonManagedReference
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private Set<OrderItem> orderItems = new HashSet<>();
 
-    @NotBlank(message = "Category id is required.")
+
+    // Many-to-One relation with Category
+    @JsonBackReference
+    @NotNull(message = "Category id is required")
     @ManyToOne
     @JoinColumn(name = "category_id",nullable = false)
     private Category category;
